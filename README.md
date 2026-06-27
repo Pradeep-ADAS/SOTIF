@@ -24,6 +24,15 @@ This project implements a simplified SOTIF workflow for an
 Automatic Emergency Braking (AEB) function to demonstrate how triggering
 conditions can be discovered, documented, classified, and mitigated.
 
+<table>
+  <tr>
+    <td align="center">
+      <b></b><br>
+      <img src="sotif_gif.gif" width="700"/>
+    </td>
+  </tr>
+</table>
+
 ---
 
 🧩 **2. Challenge**
