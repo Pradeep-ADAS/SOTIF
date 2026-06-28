@@ -1,9 +1,4 @@
 # SOTIF
-
-Description - A catalogue-driven implementation of the ISO 21448 (SOTIF) validation process
-applied to a simplified Automatic Emergency Braking (AEB) function using
-Monte Carlo scenario exploration and iterative risk reduction.
-
 ---
 
 ⭐ **1. Introduction**
@@ -36,41 +31,65 @@ conditions can be discovered, documented, classified, and mitigated.
 ---
 
 🧩 **2. Challenge**
- Talk about AEB and failures due to fog/ sensors etc.
+
+Automatic Emergency Braking (AEB) operates in complex, dynamic environments where safety depends not only on component reliability but also on environmental conditions (e.g. fog/ glare/ low illumination) and system performance limits (sensor noise/ latency).
+
+Traditional validation approaches are insufficient because many unsafe behaviors arise without any hardware or software failure — instead emerging from **functional limitations under specific operational conditions**, which is the core focus of SOTIF (ISO 21448).
+
+Key challenges include:
+- Validating AEB safety across a wide and continuously varying Operational Design Domain (ODD)
+- Capturing non-fault-related hazards where correct system behavior still leads to unsafe outcomes
+- Identifying non-linear interactions between conditions such as fog, sensor noise, and latency
+- Separating known unsafe conditions from previously unknown hazardous scenarios discovered through large-scale simulation
  
 ---
 
 🎯 **3. Objectives**
 
+Key objectives include:
+- Simulate AEB performance across diverse environmental and operational conditions using Monte Carlo scenarios
+- Identify and classify hazardous scenarios using a SOTIF (ISO 21448) area-based framework
+- Distinguish between known unsafe conditions (catalogued triggers) and unknown unsafe scenarios (emergent risks)
+- Track how system safety improves across successive design changes such as ODD restrictions, filtering, and added safety margins
 ---
 
 🛠 **4. Tech Stack**
+
+This project is implemented as a simulation-based safety analysis pipeline combining physics-based modeling, Monte Carlo scenario generation, and SOTIF-driven classification logic.
+
+Key technologies include:
+- Python – core orchestration of the AEB safety simulation pipeline
+- NumPy – random scenario generation and numerical computation of physical relationships
+- Pandas – structured representation of simulated driving scenarios and hazard classification results
+- PyYAML – loading and versioning of the triggering-condition catalogue
+- SciPy – density estimation for identifying clusters of unsafe scenarios (KDE analysis)
+- Matplotlib – visualization of SOTIF area distribution, risk evolution, and scenario space exploration
 
 ---
 🧠 **5. Key Concepts**
 
 *A. Triggering Condition Catalogue (.yaml)*
 
-Unlike hard-coded threshold approaches, the classification logic in this project is driven by a version-controlled triggering condition catalogue.
-Refer to the .yaml file in the repo.
+The project uses a dedicated triggering-condition catalogue to capture everything the engineering team has learned about unsafe AEB operating conditions. Refer to the `.yaml` file in the repository.
 
-Each entry records:
+Each catalogue entry records:
+- the triggering condition identified (e.g., heavy fog, high sensor noise)
+- the operating conditions under which it becomes unsafe
+- the mitigation introduced to address it
+- the catalogue version in which it was added
 
-- triggering condition identifier
-- discovery source
-- parameter thresholds
-- mitigation strategy
-- catalogue version
+This approach is intended to mimic how a safety engineering team would iteratively develop, validate, and refine an ADAS function during a SOTIF (ISO 21448) program. As new hazards are discovered through testing and simulation, they are incorporated into the catalogue, allowing the system to be continuously improved and re-evaluated.
 
-This mirrors the SOTIF concept of a living knowledge base where undiscovered hazards gradually become known hazards through validation.
-
+This reflects a key principle of SOTIF: safety knowledge evolves over time!
 
 ---
 
 
 *B. Simulation Methodology (Monte Carlo)*
 
-Each scenario samples:
+A Monte Carlo simulation is used to generate a large number of randomized driving scenarios (10,000), allowing the AEB system to be evaluated across a wide range of environmental and operational conditions that would be impractical to test exhaustively in the real world.
+
+Each scenario randomly samples:
 
 | Parameter | Range |
 |-----------|-------|
@@ -79,23 +98,19 @@ Each scenario samples:
 | Sensor noise | 0.0–2.0 m |
 | Processing latency | 0.0–0.3 s |
 
-Total number of scenarios generated = 10000
+For each scenario, the AEB model calculates:
+- the distance required for the vehicle to safely stop,
+- the effective obstacle detection range of the perception system,
+- whether a hazardous situation occurs.
 
-The AEB model computes for each scenario:
+A scenario is classified as hazardous whenever:
 
-- required stopping distance,
-- effective sensor detection range,
-- hazard occurrence.
-
-A hazard occurs whenever:
-
-Detection Range < Required Stopping Distance
-
+> **Detection Range < Required Stopping Distance**
 ---
 
 *C. SOTIF Classification*
 
-Scenarios are classified according to ISO 21448:
+Hazardous scenarios are classified according to the SOTIF (ISO 21448) framework:
 
 | Area | Meaning |
 |------|---------|
@@ -103,9 +118,12 @@ Scenarios are classified according to ISO 21448:
 | Area 2 | Known unsafe |
 | Area 3 | Unknown unsafe |
 
-Area 2 and Area 3 are not hard-coded. Instead, hazardous scenarios are matched against the triggering condition catalogue (.yaml):
-- match found → Area 2
-- no match found → Area 3
+Unlike conventional threshold-based approaches, Area 2 and Area 3 classifications are determined dynamically using the triggering-condition catalogue (`.yaml`):
+
+- **Match found in the catalogue** → **Area 2 (known unsafe)**
+- **No match found in the catalogue** → **Area 3 (unknown unsafe)**
+
+This enables the project to mimic the SOTIF validation process, where previously unknown hazardous scenarios are gradually discovered, documented, and mitigated over successive validation rounds.
 
 ---
 
