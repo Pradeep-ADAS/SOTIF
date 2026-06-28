@@ -127,10 +127,10 @@ Watch how fog shortens the blue cone in the second pass, turning a comfortable m
 Hazardous scenarios are classified according to the SOTIF (ISO 21448) framework:
 
 | Area | Meaning |
-|------|---------|
-| Area 1 | Known safe |
-| Area 2 | Known unsafe |
-| Area 3 | Unknown unsafe |
+|---|---|
+| **Area 1** | Known safe — no hazard |
+| **Area 2** | Known unsafe — hazard occurs, and the team has already documented this trigger |
+| **Area 3** | Unknown unsafe — hazard occurs, and **no one has documented it yet** |
 
 Unlike conventional threshold-based approaches, Area 2 and Area 3 classifications are determined dynamically using the triggering-condition catalogue (`.yaml`):
 
@@ -159,6 +159,31 @@ The triggering-condition catalogue evolves throughout the validation process:
 - **v1.2 – Fog–noise interaction:** A previously unknown interaction between fog and sensor noise is discovered through Monte Carlo analysis and incorporated into the catalogue.
 
 This progression demonstrates the central SOTIF principle that system knowledge evolves through iterative validation, discovery, and mitigation.
+
+---
+🧠 **6. Simplified System Architecture**
+
+```mermaid
+flowchart LR
+    YAML[("Triggering Condition<br/>Catalogue (YAML)")] --> SIM["Monte Carlo<br/>Simulation"]
+    SIM --> CLS["SOTIF<br/>Classifier"]
+    CLS --> A1["Area 1<br/>Known Safe"]
+    CLS --> A2["Area 2<br/>Known Unsafe"]
+    CLS --> A3["Area 3<br/>Unknown Unsafe"]
+    A3 -.->|discover & document| YAML
+    A2 -->|mitigate| MIT["Apply Fix<br/>(ODD / filter / buffer)"]
+    MIT -.->|re-simulate| SIM
+ 
+    classDef safe fill:#2ecc71,color:#fff,stroke:none
+    classDef known fill:#e67e22,color:#fff,stroke:none
+    classDef unknown fill:#e74c3c,color:#fff,stroke:none
+    class A1 safe
+    class A2 known
+    class A3 unknown
+```
+The goal of a SOTIF in this project isn't to make Area 3 disappear by definition — it's to keep finding what's hiding there, document it (i.e. shrinking Area 3, growing Area 2).
+
+Once a risk is known, we build a mitigation for it (e.g. Limiting the ODD/ Building more robust sensor filters). It moves from Area 2 → Area 1 — now it's *actually* safe.
 
 ---
 
