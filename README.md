@@ -47,10 +47,10 @@ Key challenges include:
 🎯 **3. Objectives**
 
 Key objectives include:
-- Simulate AEB performance across diverse environmental and operational conditions using Monte Carlo scenarios
-- Identify and classify hazardous scenarios using a SOTIF (ISO 21448) area-based framework
-- Distinguish between known unsafe conditions (catalogued triggers) and unknown unsafe scenarios (emergent risks)
-- Track how system safety improves across successive design changes such as ODD restrictions, filtering, and added safety margins
+- Simulate AEB performance across diverse environmental and operational conditions using Monte Carlo scenarios.
+- Identify and classify hazardous scenarios using a SOTIF (ISO 21448) area-based framework.
+- Distinguish between known unsafe conditions (catalogued triggers) and unknown unsafe scenarios (emergent risks).
+- Track how system safety improves across successive design changes such as ODD restrictions, filtering and added safety margins.
 ---
 
 🛠 **4. Tech Stack**
@@ -106,6 +106,20 @@ For each scenario, the AEB model calculates:
 A scenario is classified as hazardous whenever:
 
 > **Detection Range < Required Stopping Distance**
+
+<table>
+  <tr>
+    <td align="center">
+      <b></b><br>
+      <img src="aeb_demo.gif" width="700"/>
+    </td>
+  </tr>
+</table>
+
+In the animation above, the blue cone is the sensor's detection range and the dashed orange line marks the distance actually needed to stop — when the orange line falls outside the blue cone, the car can't stop in time.
+
+Watch how fog shortens the blue cone in the second pass, turning a comfortable margin (safe stop) into a shortfall (hazard).
+
 ---
 
 *C. SOTIF Classification*
