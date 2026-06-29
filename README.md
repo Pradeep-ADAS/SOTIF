@@ -329,9 +329,23 @@ The figure below represents how the proportion of known and unknown hazards chan
 
 📊 **8. Key Outcomes**
 
+- This project sucessfully demonstrates a SOTIF-inspired validation workflow for an Automatic Emergency Braking (AEB) system using Monte Carlo scenario exploration and hazard classification.
+- It shows how previously unknown hazardous scenarios (Area 3) can be systematically discovered, documented as triggering conditions, and incorporated into the safety docuemnt. 
+- It illustrates the iterative reduction of residual risk through successive mitigations, including ODD restrictions, perception improvements, and safety margins.
 ---
 
 ⚠️ **9. Limitations & What this project is not?**
+
+- **Simplified AEB physics model:** The Automatic Emergency Braking function is represented using a basic kinematic stopping-distance formulation (reaction time + braking distance + safety buffer), without modeling full vehicle dynamics, tire-road interaction, or control system complexity.
+- **Simplified sensor and environment models:** Perception is abstracted using parameterized fog severity, sensor noise standard deviation, and latency effects to approximate detection degradation, rather than detailed sensor fusion or signal-level simulation.
+- **Deterministic interpretation of unknown hazards:** The model assumes that once an unknown hazardous region (Area 3) is identified, it can be fully characterized and converted into a known triggering condition (Area 2) through catalogue updated by a fictional testing team.
+
+These simplifications are intentional, as the primary objective of this project is to demonstrate the iterative SOTIF workflow for hazard discovery, classification, and mitigation in an ADAS context rather than to build a production-grade vehicle simulation.
+
+For more detailed ADAS and perception-heavy projects, please refer to the following repositories:
+- 🔗  <a href="https://github.com/pradeepmadanagopalan-hash/Multi-Sensor-EKF-Localization"> Multi-Sensor-EK-Localization</a>
+- 🔗  <a href="https://github.com/pradeepmadanagopalan-hash/Autonomous-Driving-Perception-Pipeline"> Autonomous-Driving-Perception-Pipeline</a>
+- 🔗  <a href="https://github.com/pradeepmadanagopalan-hash/Stereo-Vision-Depth-Map"> Stereo-Vision-Depth-Map</a>
 
 ---
 
@@ -339,7 +353,7 @@ The figure below represents how the proportion of known and unknown hazards chan
 
 This project was developed voluntarily for demonstration purposes and does not contain or use any proprietary or confidential data.
 
-The goal was to mimic how a testing/ safety/ validation team would function when coming up with ADAS features in real companies. Hence the iterative test catalogue update was purely representational. 
+The validation workflow, triggering-condition catalogue, and iterative mitigation process are illustrative and were designed to represent a possible SOTIF-oriented ADAS development and validation process.
 
 ---
 
@@ -348,5 +362,9 @@ The goal was to mimic how a testing/ safety/ validation team would function when
 
 Through this project, I demonstrate my ability to:
 
-- 
+- Design and implement a simulation-based SOTIF validation workflow for ADAS functions using Monte Carlo scenario exploration.
+- Develop simplified physics-based hazard evaluation models and classify scenarios according to SOTIF area concepts.
+- Design and maintain triggering-condition catalogues to support iterative hazard discovery, documentation, and mitigation activities.
+- Analyze and visualize residual risk evolution across successive validation and mitigation rounds.
+
 ---
