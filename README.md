@@ -302,3 +302,51 @@ The simulation was executed over four successive validation rounds. As additiona
 
 - **Evolution of Test Space for Unknown Hazards**
 
+The figure below shows how the test space for the test team evolved after every round of monte carlo simulation using the updated trigger catalogue. In simpler words, the highlighted region in the density maps represents the region where the testing team should ideally focus to discover scientifi creasoning behind unknown - unsafe hazards. 
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="viz2.png" width="150%"/>
+      <p><b>Density Maps - Unkown Unsafe Hazards</b></p>
+    </td>
+  </tr>
+</table>
+
+The figure below represents how the proportion of known and unknown hazards change with each passing validation round. 
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="viz3.png" width="150%"/>
+      <p><b>Iterative Unknown Risk Reduction - SOTIF</b></p>
+    </td>
+  </tr>
+</table>
+
+---
+
+
+📊 **8. Key Outcomes**
+
+---
+
+⚠️ **9. Limitations & What this project is not?**
+
+---
+
+⚠️ **10. Data Note**
+
+This project was developed voluntarily for demonstration purposes and does not contain or use any proprietary or confidential data.
+
+The goal was to mimic how a testing/ safety/ validation team would function when coming up with ADAS features in real companies. Hence the iterative test catalogue update was purely representational. 
+
+---
+
+
+👨‍💻 **11. Skills Demonstrated**
+
+Through this project, I demonstrate my ability to:
+
+- 
+---
