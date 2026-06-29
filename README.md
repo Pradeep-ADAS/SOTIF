@@ -189,62 +189,116 @@ Once a risk is known, we build a mitigation for it (e.g. Limiting the ODD/ Build
 
 📈 **7. Results and Observations**
 
+- **Summary**
+
 The simulation was executed over four successive validation rounds. As additional knowledge was gained and mitigations were introduced, the distribution of scenarios across the SOTIF areas evolved accordingly.
 
 | Validation Round | Area 1<br>(Known Safe) | Area 2<br>(Known Unsafe) | Area 3<br>(Unknown Unsafe) | Total Hazard Rate |
 |:----------------:|:----------------------:|:------------------------:|:--------------------------:|:-----------------:|
 | Round 0 — Baseline | 72.9% | 26.3% | 0.8% | 27.1% |
 | Round 1 — ODD Restriction | 91.0% | 7.8% | 1.3% | 9.0% |
-| Round 2 — Noise Filtering | 91.9% | 7.2% | 0.9% | 8.1% |
-| Round 3 — Safety Buffer | 89.0% | 11.0% | 0.0% | 11.0% |
+| Round 2 — Noise Filtering | 90.3% | 9.2% | 0.5% | 9.7% |
+| Round 3 — Safety Buffer | 86.9% | 13.1% | 0.0% | 13.1% |
+
+---
 
 - **Round 0 — Baseline**
 
-  The baseline configuration resulted in a **27.1% hazardous scenario rate**, consisting primarily of **known hazards (Area 2: 26.3%)** and a small fraction of **unknown hazards (Area 3: 0.8%)**.
+  - The baseline configuration resulted in a **27.1% hazardous scenario rate**, consisting primarily of **known hazards (Area 2: 26.3%)** and a small fraction of **unknown hazards (Area 3: 0.8%)**.
 
-  In this illustrative SOTIF case study, the engineering team is assumed to have previously identified that **fog severity > 0.50** can significantly degrade the perception system and has therefore documented this as **TC-001** in the triggering-condition catalogue.
-
-  However, the Monte Carlo simulation also revealed a small cluster of hazardous scenarios occurring when:
-
-  - **fog severity > 0.25**, and
-  - **sensor noise > 0.80 m**
-
-  Although neither condition alone was sufficiently severe to be considered unsafe, their combination produced an unexpected degradation in detection performance. Because this interaction had not yet been documented, these scenarios were classified as **Area 3 (unknown unsafe)**.
+  - In this illustrative SOTIF case study, the engineering team is assumed to have previously identified that **fog severity > 0.50** can significantly degrade the perception system and has therefore documented this as **TC-001** in the triggering-condition catalogue. Hence all runs with fog severity > 0.5 and hazard flag active are known unsafe hazards. However, we also see 0.8& of the test runs have a fog severity < 0.5 but still have a active hazard flag. These are yet to be understood or docuemnted. Hence they are unknown unsafe hazards.
+  - NOTE: It is not necessary that all simulations with fog severity > 0.5 result in a hazard. As can be seen there can be several scenarios in which despite of the heavy fog the AEB operates fine (for example if the speed of the EGO is low or if the sensor latency is low).
+  - Now, before the next round of testing - say the fictional test team decalres a restriction in the usage of the AEB (i.e. redefines the ODD of the AEB function). They say beyond a fog severity of 0.7, the AEB will no longer function and hand over the control of the brakes to the driver with a message on the HMI. The ODD cap is set at 0.70, not 0.50, because test team has already validated standard AEB performance up to that point — the 0.50–0.70 band is a known gap covered by an enhanced AEB still in R&D.
+  - **In simpler words - a hazard between fog severeity of 0.5 and 0.7 is a known hazard which will be mitigated by ongoign R&D. However, fog severity above 0.7 is no longer part of the ODD and should not be tested in Round 1.**
+  
+<table>
+  <tr>
+    <td align="center">
+      <img src="viz1_round_0.png" width="70%"/>
+      <p><b>Monte Carlo Results - Post Round 0</b></p>
+    </td>
+  </tr>
+</table>
 
 ---
 
 - **Round 1 — Operational Design Domain (ODD) restriction**
 
-  By restricting the **Operational Design Domain (ODD)** to reduce exposure to severe fog conditions, the total hazardous scenario rate decreased from **27.1% to 9.0%**.
+  - By restricting the **Operational Design Domain (ODD)** to reduce exposure to severe fog conditions, the total hazardous scenario rate decreased from **27.1% to 9.0%**.
 
-  Nevertheless, the rate of **Area 3 scenarios increased slightly from 0.8% to 1.3%**. This occurs because the dominant known hazard (heavy fog) has been reduced, making the previously undiscovered fog–sensor interaction more visible within the remaining scenario population.
+  - Nevertheless, the rate of **Area 3 scenarios increased slightly from 0.8% to 1.3%**. This occurs because the dominant known hazard (heavy fog) has been reduced, making the previously undiscovered fog–sensor interaction more visible within the remaining scenario population.
+ 
+  - From this round of SOTIF analysis, it is clear that there exists a region of unknown hazards i.e. although the fog severity < 0.5, the runs end up as being hazards. The common pattern among all area 3 runs is clearly that they occur from moderate to high sensor noise standard deviation. Hence the fictional test team must now validate this finding and bring out scientiic evidence to support the claim that moderate to high sensor noise causes drop in performance of AEB and put an accurate number to this.
+ 
+  - The team carries out tests and comes back with scientififc evidence that whenever the sensor noise is above 1.50, the AEB perfromance drops and docuemnts this as **TC-002** in the live catalog. Hence the catalog now has 2 known trggers (fog > 0.5 and Sensor Noise > 1.5) and 1 ODD restrcition (fog > 0.7) as fixed by the test team.
+ 
+  - We run the next set of Monte Carlo simulations with these rules. 
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="viz1_round_1.png" width="70%"/>
+      <p><b>Monte Carlo Results - Post Round 1</b></p>
+    </td>
+  </tr>
+</table>
 
 ---
 
-- **Round 2 — Sensor noise filtering**
+- **Round 2 — Sensor perfromance trigger - included**
 
-  In this illustrative workflow, the engineering team is assumed to have subsequently identified **sensor noise > 1.50 m** as another hazardous operating condition and documented it as **TC-002**.
+  - In this illustrative workflow, the engineering team is assumed to have identified **sensor noise > 1.50 m** as another hazardous operating condition and documented it as **TC-002**.
 
-  Introducing a noise filtering strategy reduced the total hazardous scenario rate further, from **9.0% to 8.1%**, while reducing the unknown hazard rate from **1.3% to 0.9%**.
+  - With the updated catalogue, the known unsafe scenarios increae (7.8% in Round 1 to 9.2 percentage in Round 2) while the unknon unsafe scenarios decresae (1.3% in Round 1 to 0.5 % in round 2) as expected.
+ 
+  -   However, a small cluster of scenarios with:
 
-  However, a small cluster of scenarios with:
 
-  - **fog severity > 0.25**, and
-  - **sensor noise between approximately 0.8 m and 1.0 m**
+      - **fog severity > 0.25**, and
+      - **sensor noise between approximately 0.8 m and 1.5 m**
 
-  continued to produce hazardous behavior. Because this interaction had still not been documented in the catalogue, these scenarios remained classified as **Area 3**.
+  continued to produce hazardous behavior and hence these scenarios remained classified as **Area 3**. If one were to guess these scenarios might probably arise due to the interaction effects of the fog and the sensor noise. Although niether of them ny themselves is severe enough to degrade the perfoance of the AEB, when both values are moderate enough maybe the AEB's perfromance drops.
+  
+  -   Hence this will now be the next target of the testing team - i.e. to prove/ disprve scientifically that intercation effects exist and once again put solid numbers to it.
+ 
+  -   Analysis of the residual hazardous scenarios revealed that the combination:
+
+      - **fog severity > 0.25**, and
+      - **sensor noise > 0.80 m**
+
+  represented a previously undocumented interaction effect. In this illustrative SOTIF workflow, this interaction was added to the triggering-condition catalogue as **TC-003**.
+  
+<table>
+  <tr>
+    <td align="center">
+      <img src="viz1_round_2.png" width="70%"/>
+      <p><b>Monte Carlo Results - Post Round 2</b></p>
+    </td>
+  </tr>
+</table>
+
 
 ---
 
 - **Round 3 — Discovery of interaction effects**
 
-  Analysis of the residual hazardous scenarios revealed that the combination:
+  - The team introduces an additional safety margin of 5 m to make the AEB SOTIF workflow more conservative and includes the interaction effects mentioned in Round 2 to the trigger catalogue. 
 
-  - **fog severity > 0.25**, and
-  - **sensor noise > 0.80 m**
+  - This finally results in an **unknown hazard percenatge of 0.00%**. 
 
-  represented a previously undocumented interaction effect. In this illustrative SOTIF workflow, this interaction was added to the triggering-condition catalogue as **TC-003**.
+  - Although the final hazardous scenario rate increased slightly to **13.1%**, this reflects a key principle of SOTIF: the objective is not necessarily to eliminate all hazards, but to ensure that hazardous scenarios are identified, understood, documented, and mitigated. These 13.1% of hazards are identified, understood and docuemnted. Mitigation of these hazards in not within the scope of this repo.
 
-  After introducing an additional safety margin, all remaining hazardous scenarios became classified as **known hazards (Area 2)**, reducing the **Area 3 rate from 0.9% to 0.0%**.
 
-  Although the final hazardous scenario rate increased slightly to **11.0%**, this reflects a key principle of SOTIF: the objective is not necessarily to eliminate all hazards, but to ensure that hazardous scenarios are identified, understood, documented, and mitigated.
+<table>
+  <tr>
+    <td align="center">
+      <img src="viz1_round_3.png" width="70%"/>
+      <p><b>Monte Carlo Results - Post Round 3</b></p>
+    </td>
+  </tr>
+</table>
+
+---
+
+- **Evolution of Test Space for Unknown Hazards**
+
