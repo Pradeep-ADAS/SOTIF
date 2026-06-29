@@ -187,3 +187,64 @@ Once a risk is known, we build a mitigation for it (e.g. Limiting the ODD/ Build
 
 ---
 
+📈 **7. Results and Observations**
+
+The simulation was executed over four successive validation rounds. As additional knowledge was gained and mitigations were introduced, the distribution of scenarios across the SOTIF areas evolved accordingly.
+
+| Validation Round | Area 1<br>(Known Safe) | Area 2<br>(Known Unsafe) | Area 3<br>(Unknown Unsafe) | Total Hazard Rate |
+|:----------------:|:----------------------:|:------------------------:|:--------------------------:|:-----------------:|
+| Round 0 — Baseline | 72.9% | 26.3% | 0.8% | 27.1% |
+| Round 1 — ODD Restriction | 91.0% | 7.8% | 1.3% | 9.0% |
+| Round 2 — Noise Filtering | 91.9% | 7.2% | 0.9% | 8.1% |
+| Round 3 — Safety Buffer | 89.0% | 11.0% | 0.0% | 11.0% |
+
+- **Round 0 — Baseline**
+
+  The baseline configuration resulted in a **27.1% hazardous scenario rate**, consisting primarily of **known hazards (Area 2: 26.3%)** and a small fraction of **unknown hazards (Area 3: 0.8%)**.
+
+  In this illustrative SOTIF case study, the engineering team is assumed to have previously identified that **fog severity > 0.50** can significantly degrade the perception system and has therefore documented this as **TC-001** in the triggering-condition catalogue.
+
+  However, the Monte Carlo simulation also revealed a small cluster of hazardous scenarios occurring when:
+
+  - **fog severity > 0.25**, and
+  - **sensor noise > 0.80 m**
+
+  Although neither condition alone was sufficiently severe to be considered unsafe, their combination produced an unexpected degradation in detection performance. Because this interaction had not yet been documented, these scenarios were classified as **Area 3 (unknown unsafe)**.
+
+---
+
+- **Round 1 — Operational Design Domain (ODD) restriction**
+
+  By restricting the **Operational Design Domain (ODD)** to reduce exposure to severe fog conditions, the total hazardous scenario rate decreased from **27.1% to 9.0%**.
+
+  Nevertheless, the rate of **Area 3 scenarios increased slightly from 0.8% to 1.3%**. This occurs because the dominant known hazard (heavy fog) has been reduced, making the previously undiscovered fog–sensor interaction more visible within the remaining scenario population.
+
+---
+
+- **Round 2 — Sensor noise filtering**
+
+  In this illustrative workflow, the engineering team is assumed to have subsequently identified **sensor noise > 1.50 m** as another hazardous operating condition and documented it as **TC-002**.
+
+  Introducing a noise filtering strategy reduced the total hazardous scenario rate further, from **9.0% to 8.1%**, while reducing the unknown hazard rate from **1.3% to 0.9%**.
+
+  However, a small cluster of scenarios with:
+
+  - **fog severity > 0.25**, and
+  - **sensor noise between approximately 0.8 m and 1.0 m**
+
+  continued to produce hazardous behavior. Because this interaction had still not been documented in the catalogue, these scenarios remained classified as **Area 3**.
+
+---
+
+- **Round 3 — Discovery of interaction effects**
+
+  Analysis of the residual hazardous scenarios revealed that the combination:
+
+  - **fog severity > 0.25**, and
+  - **sensor noise > 0.80 m**
+
+  represented a previously undocumented interaction effect. In this illustrative SOTIF workflow, this interaction was added to the triggering-condition catalogue as **TC-003**.
+
+  After introducing an additional safety margin, all remaining hazardous scenarios became classified as **known hazards (Area 2)**, reducing the **Area 3 rate from 0.9% to 0.0%**.
+
+  Although the final hazardous scenario rate increased slightly to **11.0%**, this reflects a key principle of SOTIF: the objective is not necessarily to eliminate all hazards, but to ensure that hazardous scenarios are identified, understood, documented, and mitigated.
